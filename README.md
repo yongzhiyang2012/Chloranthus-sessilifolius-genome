@@ -12,4 +12,5 @@ sonicparanoid -i ./input -o ./output -m fast -t 40  #All the protein sequences w
 
 ### Concatenation or gene tree building
 ```
-iqtree -s cds.
+iqtree -s cds.best.fas.gt80 -st DNA -pre cds.best.fas.gt80 -nt 20 -bb 1000 -m MFP -quiet -redo
+```
