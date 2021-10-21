@@ -30,7 +30,7 @@ java -jar astral.5.7.1.jar -i OSCG.gene.tre -q OSCG.ASTRAL.tre -o OSCG.ASTRAL.tr
 ### ASTRAL-pro analyses (for LCG)
 ```
 java -D"java.library.path=/data/01/user106/software/astral/A-pro-paper/ASTRAL-MP/lib" -jar /data/01/user106/software/astral/A-pro-paper/ASTRAL-MP/astral.1.1.2.jar -i LCGs.tre -a Ind2Sp.list -o LCG.ASTRAL-pro.tre
-# The Ind2Sp.list like this as one species can only retain up to 5 sequences for each cluster:
+# As one species can only retain up to 5 sequences for each cluster, so the Ind2Sp.list looks like this:
 # Aco_1 Aco
 # Aco_2 Aco
 # Aco_3 Aco
