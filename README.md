@@ -28,7 +28,20 @@ java -jar astral.5.7.1.jar -i OSCG.gene.tre -q OSCG.ASTRAL.tre -o OSCG.ASTRAL.tr
 ### STAG analyses (for LCG)
 
 ### ASTRAL-pro analyses (for LCG)
-
+```
+java -D"java.library.path=/data/01/user106/software/astral/A-pro-paper/ASTRAL-MP/lib" -jar /data/01/user106/software/astral/A-pro-paper/ASTRAL-MP/astral.1.1.2.jar -i LCGs.tre -a Ind2Sp.list -o LCG.ASTRAL-pro.tre
+# The Ind2Sp.list like this "Aco_1 Aco
+Aco_2 Aco
+Aco_3 Aco
+Aco_4 Aco
+Aco_5 Aco
+Ppe_1 Ppe
+Ppe_2 Ppe
+Ppe_3 Ppe
+Ppe_4 Ppe
+Ppe_5 Ppe
+..."
+```
 
 ### Hybridization analyses (PhyloNetworks running in Julia programming language with SSCG trees)
 ```
