@@ -41,6 +41,25 @@ java -jar astral.5.7.1.jar -i SSCG.gene.tre -q SSCG.ASTRAL.tre -o SSCG.ASTRAL.tr
 java -jar astral.5.7.1.jar -i OSCG.gene.tre -o OSCG.ASTRAL.tre
 java -jar astral.5.7.1.jar -i OSCG.gene.tre -q OSCG.ASTRAL.tre -o OSCG.ASTRAL.tre.t8 -t 8
 ```
+### Densitree analyses (for SSCG)
+```
+library(ape)
+library(Matrix)
+library(phybase)
+tree_str <- "tree.file"
+name <- species.name(tree_str)
+name_len <- length(name)
+tree_node <- read.tree.nodes(tree_str,name)$nodes
+node_len <- nrow(tree_node)
+tree_node[,4] <- 1
+new_node <- tree.noclock2clock(node_len,tree_node,name_len)
+node_height <- node.height(node_len,new_node,name_len)
+new_node[,4] <- new_node[,4]*(1/node_height)
+final_tree <- write.subtree(node_len,new_node,name,node_len)
+cat(final_tree)
+cat("
+")
+```
 ### DiscoVista analyses (for both SSCG and OSCG)
 ```
 DiscoVista/src/utils/generate_clade-defs.py annotation.txt clade-defs.txt
