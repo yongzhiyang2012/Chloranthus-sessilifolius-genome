@@ -1,7 +1,47 @@
 # Chloranthus-sessilifolius-genome
-### Genome assembly  
-  
-### Genome annotation  
+### Genome assembly
+```
+smartdenovo.pl -p prefix -c 1 reads.fa > prefix.mak
+wtpre -J 3,000
+wtzmo-k 21 -z 10 -Z 16 -U -1 -m 0.1 -A 1,000
+wtclp -d 3 -k 300 -m 0.1 -FT
+wtlay -w 300 -s 200 -m 0.1 -r 0.95 -c 1
+smartdenovo.pl -p prefix -c 1 reads.fa > prefix.mak
+make -f prefix.mak
+```
+### Genome annotation
+```
+de novo:
+genscan Arabidopsis.smat contig1.fa| phase.genscan.output.pl - > contig1.fa.gff3
+augustus --species=BUSCO_final.contig.fa.busco-long_xxxx contig1.fa | perl ConvertFormat_augustus.pl - contig1.gff
+trainGlimmerHMM contig1.fa  exon.file -d  glimmerhmm_contig1  2>&1 | tee trainGlimmerHMM_contig1.log
+glimmerhmm_linux_x86_64 contig1.fa -d glimmerhmm_contig1  -g  -o  tmp/contig1.gff ; perl ConvertFormat_glimmerhmm.pl tmp/contig1.fa glimmerhmm_results/contig1.gff
+
+homolog-based:
+GeMoMa GeMoMaPipeline threads=40 t=final_assembly_genome.fa s=own a=reference.gff  g=reference.fa  outdir=XXX  AnnotationFinalizer.r=NO tblastn=false
+
+transcriptome-based:
+perl Launch_PASA_pipeline.pl -c final_assembly_genome.fa -C -R -g ./xxx  -T -t Trinity.fasta.clean -u trinity_all.Trinity.fasta  --ALIGNERS blat,gmap --CPU 50
+
+EVM:
+perl partition_EVM_inputs.pl --genome ./final_assembly_genome.fa --gene_predictions ./all_abinitio.gff --protein_alignments ./all_homologs.gff --transcript_alignments ./jsl_mydb_pasa.sqlite.pasa_assemblies.gff3 --segmentSize 1000000 --overlapSize 200000 --partition_listing partitions_list.out
+perl write_EVM_commands.pl --genome ./final_assembly_genome.fa --weights evm.weights.txt --gene_predictions ./all_abinitio.gff --protein_alignments ./all_homologs.gff --transcript_alignments ./jsl_mydb_pasa.sqlite.pasa_assemblies.gff3 --partitions partitions_list.out --output_file_name evm.out  > commands.list
+perl recombine_EVM_partial_outputs.pl --partitions partitions_list.out --output_file evm.out
+perl convert_EVM_outputs_to_GFF3.pl --partitions partitions_list.out --output evm.out --genome final_assembly_genome.fa
+find . -regex ".*evm.out.gff3" -exec cat {} \; > EVM.all.gff3
+
+repeat annotation:
+RepeatMasker -e rmblast -pa 60 -nolow -norna -no_is -gff -species Mesangiospermae final.contig.fa
+
+BuildDatabase -name maoli_db final.contig.fa  2>&1 | tee repeatmodeler.log
+RepeatModeler -pa 60 -database maoli_db 2>&1 | tee 02.RepeatModeler.log
+RepeatMasker -pa 30 -lib ./custom.lib final.contig.fa
+
+gt suffixerator -db final.contig.fa -indexname final.contig -tis -suf -lcp -des -ssp -sds -dna
+gt ltrharvest  -index final.contig  -similar 90 -vic 10 -seed 20 -seqids yes  -minlenltr 60 -maxlenltr 7000 -mintsd 4 -maxtsd 20 -motifmis 3  > genome.fasta.harvest.scn
+ltr_finder Contig1.fa -w 2 > Contig1.fa.out
+LTR_retriever -genome final.contig.fa -inharvest genome.fasta.harvest.scn -infinder genome.finder.scn -threads 30
+```
 
 ### WGD analyses 
 all analyses were performed by WGDI: https://github.com/SunPengChuan/wgdi
